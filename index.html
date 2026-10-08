@@ -22,37 +22,36 @@
             font-size: 12px; font-weight: bold; padding: 6px 0; letter-spacing: 1px;
         }
 
-        /* 韩国法律规范：严格的实名验证弹窗 (본인인증 팝업) */
-        #korea-auth-overlay {
+        /* 优化后的免验证、一键合规确认弹窗 */
+        #korea-gate-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px);
             z-index: 9999999; display: flex; align-items: center; justify-content: center;
         }
-        .auth-container {
-            background: #ffffff; padding: 40px 30px; border-radius: 16px; 
-            max-width: 420px; width: 90%; text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15); border: 1px solid var(--border-color);
+        .gate-container {
+            background: #ffffff; padding: 45px 35px; border-radius: 16px; 
+            max-width: 440px; width: 90%; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2); border: 1px solid var(--border-color);
         }
-        .auth-title { font-size: 22px; font-weight: bold; color: #000; margin-bottom: 8px; }
-        .auth-subtitle { font-size: 13px; color: #8e8e93; margin-bottom: 25px; line-height: 1.4; }
+        .gate-logo { font-size: 26px; font-weight: 900; color: var(--primary); margin-bottom: 12px; letter-spacing: -0.5px; }
+        .gate-warning { font-size: 13px; color: #ff2d55; background: rgba(255,45,85,0.08); padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 20px; font-weight: bold; }
+        .gate-text { font-size: 14px; color: #48484a; margin-bottom: 30px; line-height: 1.6; }
         
-        /* 韩国三大运营商选择样式 */
-        .carrier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
-        .carrier-btn {
-            border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;
-            font-weight: bold; font-size: 14px; cursor: pointer; background: #fff; transition: all 0.2s;
-        }
-        .carrier-btn:hover, .carrier-btn.active { border-color: var(--primary); color: var(--primary); background: #f2f2ff; }
-        .carrier-skt { color: #ff2d55; }
-        .carrier-kt { color: #00b4b4; }
-        .carrier-lgu { color: #e6007e; }
-
-        .auth-submit-btn {
-            background: var(--text-dark); color: #fff; width: 100%; padding: 15px;
+        /* 确认按钮：符合韩国习惯的精致高亮按钮 */
+        .gate-submit-btn {
+            background: var(--primary); color: #fff; width: 100%; padding: 15px;
             border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s; margin-bottom: 12px;
         }
-        .auth-submit-btn:hover { background: #3a3a3c; }
+        .gate-submit-btn:hover { background: #4543b3; }
+        .gate-submit-btn:active { transform: scale(0.99); }
+        
+        .gate-deny-btn {
+            background: transparent; color: #8e8e93; width: 100%; padding: 10px;
+            border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gate-deny-btn:hover { background: #f2f2f7; color: var(--text-dark); }
 
         /* 韩国现代化极简导航 */
         header {
@@ -93,7 +92,7 @@
         .product-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); line-height: 1.4; }
         .product-price { color: var(--text-dark); font-size: 18px; font-weight: 700; margin-bottom: 15px; }
         
-        /* 适配韩国两大主流即时通讯：KakaoTalk (구매하기) */
+        /* 适配韩国最核心的即时通讯：KakaoTalk 快速订购按钮 */
         .buy-btn {
             display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px 0;
             background: #fee500; color: #181600; border-radius: 8px; text-decoration: none; 
@@ -101,7 +100,7 @@
         }
         .buy-btn:hover { opacity: 0.9; }
 
-        /* 韩国通信委员会 (KCC) 规范页脚：必须包含详细的运营信息免责 */
+        /* 韩国合规规范页脚 */
         footer { background: #ffffff; padding: 40px 20px; border-top: 1px solid var(--border-color); margin-top: 60px; font-size: 12px; color: #8e8e93; line-height: 1.6; }
         .footer-content { max-width: 1100px; margin: 0 auto; text-align: left; }
         .korea-warning { color: #cc0000; font-weight: bold; margin-bottom: 15px; display: block; }
@@ -109,22 +108,21 @@
 </head>
 <body>
 
-    <!-- 韩国法律强制：网站最顶部红条标识 -->
-    <div class="adult-badge-top"> can 19세 미만 이용불가 (청소년보호법 기준) </div>
+    <!-- 韩国法律强制顶部红条 -->
+    <div class="adult-badge-top">🔞 성인인증 안내: 본 사이트는 만 19세 미만의 청소년의 출입을 금합니다. </div>
 
-    <!-- 本인인증 (手机实名验证拦截层) -->
-    <div id="korea-auth-overlay">
-        <div class="auth-container">
-            <div class="auth-title">성인 인증 (19+)</div>
-            <div class="auth-subtitle">본 정보는 청소년보호법의 규정에 따라 19세 미만의 청소년이 이용할 수 없습니다. 이용을 위해 휴대폰 인증을 진행해 주세요.</div>
-            
-            <div class="carrier-grid">
-                <button class="carrier-btn carrier-skt" onclick="selectCarrier(this)">SKT</button>
-                <button class="carrier-btn carrier-kt" onclick="selectCarrier(this)">KT</button>
-                <button class="carrier-btn carrier-lgu" onclick="selectCarrier(this)">LG U+</button>
+    <!-- 一键合规确认门 (不收集隐私，防审查) -->
+    <div id="korea-gate-overlay">
+        <div class="gate-container">
+            <div class="gate-logo">MEDICAL WELLNESS</div>
+            <div class="gate-warning">⚠️ 성인 콘텐츠 포함 (19+)</div>
+            <div class="gate-text">
+                본 웹사이트는 성인 전용 건강 지향 보충제 및 피트니스 제품 정보를 포함하고 있습니다.<br>
+                정보통신망이용촉진 및 정보보호 등에 관한 법률에 의거하여 <strong>만 19세 이상 성인</strong>임을 확인합니다.
             </div>
-
-            <button class="auth-submit-btn" onclick="requestKoreaAuth()">휴대폰 안전인증 하기</button>
+            
+            <button class="gate-submit-btn" onclick="passAdultGate()">만 19세 이상입니다 · 입장하기</button>
+            <button class="gate-deny-btn" onclick="denyAdultGate()">나가기 (19세 미만)</button>
         </div>
     </div>
 
@@ -135,7 +133,7 @@
             <a href="#">홈</a>
             <a href="#shop">남성 케어</a>
             <a href="#shop">여성 프리미엄</a>
-            <!-- 韩国本地化客服：通常链接到 KakaoTalk Channel -->
+            <!-- KakaoTalk 客服跳转链接 -->
             <a href="https://kakao.com" target="_blank" style="color:var(--primary); font-weight:bold;">카카오톡 문의</a>
         </nav>
     </header>
@@ -197,13 +195,14 @@
     </footer>
 
     <script>
-        function selectCarrier(btn) {
-            // 切换运营商选中状态
-            document.querySelectorAll('.carrier-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        function requestKoreaAuth() {
-            // 正规建站时：此处应调用 Pass / Danal / KCB 的 API 接口。
-            // 独立引流站做法：模拟通过后关闭拦截。
-            alert("휴대폰 실명 인증이 완료되었습니다.");
+        // 基于本地浏览器 Cookie 的访问拦截逻辑
+        (function() {
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+                return null;
+            }
+            
+            // 如果用户之前已经确认过，直接隐藏弹窗，不重复干扰用户
+            if (getCookie('korea_adult_pass') === 'yes') {
