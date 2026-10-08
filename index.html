@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adult Wellness | 高端私密健康与膳食补剂商城</title>
+    <style>
+        /* 全局黑金皮肤重构 */
+        :root {
+            --primary: #c5a880; /* 奢华金 */
+            --accent: #6a1b9a;  /* 魅惑紫 */
+            --bg-dark: #0a0a0f; /* 深邃黑 */
+            --card-bg: #13131a; /* 卡片黑 */
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: var(--bg-dark); 
+            color: #ffffff; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 18+ 拦截门样式 */
+        #adult-gate-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, #1a1a24 0%, #0a0a0f 100%);
+            z-index: 9999999; display: flex; align-items: center; justify-content: center;
+        }
+        .gate-container {
+            background: var(--card-bg); border: 1px solid #2a1b40; padding: 50px 40px;
+            border-radius: 20px; max-width: 450px; text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+        }
+        .gate-logo { font-size: 32px; font-weight: 800; color: var(--primary); margin-bottom: 15px; letter-spacing: 1px; }
+        .gate-warning { font-size: 13px; color: #ff3344; background: rgba(255,51,68,0.1); padding: 6px 15px; border-radius: 20px; display: inline-block; margin-bottom: 20px; font-weight: 600; }
+        .gate-text { color: #a0a0ab; font-size: 15px; line-height: 1.6; margin-bottom: 35px; }
+        .gate-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #8e24aa 100%); color: #fff;
+            border: none; padding: 14px 40px; font-size: 16px; font-weight: bold;
+            border-radius: 30px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; width: 100%; margin-bottom: 12px;
+        }
+        .gate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(106,27,154,0.4); }
+        .gate-btn-deny { background: transparent; color: #666; border: 1px solid #333; padding: 10px 40px; font-size: 14px; border-radius: 30px; cursor: pointer; width: 100%; }
+
+        /* 导航栏 */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background: rgba(10, 10, 15, 0.95);
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1a1a24;
+        }
+        .logo { font-size: 24px; font-weight: 800; color: var(--primary); text-decoration: none; }
+        nav a { color: #fff; text-decoration: none; margin-left: 25px; font-size: 15px; transition: color 0.3s; }
+        nav a:hover { color: var(--primary); }
+
+        /* 首屏 Banner */
+        .hero {
+            text-align: center; padding: 120px 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), var(--bg-dark)), url('https://unsplash.com') center/cover;
+        }
+        .hero h1 { font-size: 45px; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; }
+        .hero p { font-size: 18px; color: var(--primary); margin-bottom: 40px; }
+        .hero-btn {
+            background: linear-gradient(135deg, var(--accent), #8e24aa); color: #fff;
+            padding: 15px 40px; font-size: 16px; font-weight: 700; border-radius: 50px;
+            text-decoration: none; display: inline-block; box-shadow: 0 10px 25px rgba(106,27,154,0.4);
+        }
+
+        /* 产品展示网格 */
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 { font-size: 32px; margin-bottom: 10px; }
+        .section-title p { color: #666; font-size: 14px; }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card {
+            background: var(--card-bg); border: 1px solid #1a1a24;
+            border-radius: 12px; padding: 20px; text-align: center;
+            transition: all 0.3s ease;
+        }
+        .product-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(106,27,154,0.2); }
+        .product-img { width: 100%; height: 220px; background: #1a1a24; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 40px; }
+        .product-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #fff; }
+        .product-price { color: var(--primary); font-size: 20px; font-weight: 700; margin-bottom: 15px; }
+        .buy-btn {
+            display: inline-block; width: 100%; padding: 12px 0;
+            background: transparent; border: 1px solid var(--primary); color: var(--primary);
+            border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s;
+        }
+        .buy-btn:hover { background: var(--primary); color: #000; }
+
+        /* 页脚免责声明 */
+        footer { background: #050508; padding: 40px 20px; text-align: center; border-top: 1px solid #1a1a24; margin-top: 60px; }
+        .disclaimer { max-width: 900px; margin: 0 auto; font-size: 11px; color: #555; line-height: 1.8; }
+    </style>
+</head>
+<body>
+
+    <!-- 18+ 拦截门 -->
+    <div id="adult-gate-overlay">
+        <div class="gate-container">
+            <div class="gate-logo">ADULT WELLNESS</div>
+            <div class="gate-warning">⚠️ 限制级内容提示</div>
+            <div class="gate-text">本网站包含成人私密调理用品信息。您必须保证自身已年满 18 周岁方可进入浏览。</div>
+            <button class="gate-btn" onclick="verifyAdult()">我已年满 18 岁 · 进入网站</button>
+            <button class="gate-btn-deny" onclick="denyAdult()">未满 18 岁</button>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <header>
+        <a href="#" class="logo">ADULT STORE</a>
+        <nav>
+            <a href="#">首页</a>
+            <a href="#shop">男性专区</a>
+            <a href="#shop">女性私密</a>
+            <a href="https://t.me" target="_blank" style="color:var(--primary); font-weight:bold;">联系客服</a>
+        </nav>
+    </header>
+
+    <!-- 核心 Banner -->
+    <section class="hero">
+        <h1>重塑身体机能 · 焕发巅峰渴望</h1>
+        <p>探索高端亲密健康膳食补剂与调理方案</p>
+        <a href="#shop" class="hero-btn">立即选购</a>
+    </section>
+
+    <!-- 商品区域 -->
+    <main class="container" id="shop">
+        <div class="section-title">
+            <h2>尊享私密单品</h2>
+            <p>100% 隐私保护 · 全程保密顺丰发货</p>
+        </div>
+
+        <div class="product-grid">
+            <!-- 单品 1 -->
+            <div class="product-card">
+                <div class="product-img">♂️</div>
+                <div class="product-title">男士高纯度复合玛咖膳食补剂</div>
+                <div class="product-price">￥399.00</div>
+                <!-- 此处可以将链接替换为你的 Telegram、微信二维码、或第三方收款直链 -->
+                <a href="https://t.me" target="_blank" class="buy-btn">立即私密订购</a>
+            </div>
+
+            <!-- 单品 2 -->
+            <div class="product-card">
+                <div class="product-img">💧</div>
+                <div class="product-title">植物萃取男士极速紧致按摩精油</div>
+                <div class="product-price">￥450.00</div>
+                <a href="https://t.me" target="_blank" class="buy-btn">立即私密订购</a>
+            </div>
+
+            <!-- 单品 3 -->
+            <div class="product-card">
+                <div class="product-img">♀️</div>
+                <div class="product-title">女性私密舒缓快感促进凝胶</div>
+                <div class="product-price">￥299.00</div>
+                <a href="https://t.me" target="_blank" class="buy-btn">立即私密订购</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- 法律合规页脚 -->
+    <footer>
+        <div class="disclaimer">
+            <strong>LEGAL DISCLAIMER / 法律免责声明:</strong> 本站销售的所有商品均属于成人两性用品。页面上关于补剂效果的任何陈述未经官方正式评估。此类产品不可替代处方药，不用于诊断、治疗或预防任何疾病。阁下点击进入本站即等同于确认自身已满足当地法定成年人标准（满18岁）。
+        </div>
+    </footer>
+
+    <script>
+        function verifyAdult() {
+            document.getElementById('adult-gate-overlay').style.display = 'none';
+        }
+        function denyAdult() {
+            window.location.href = "https://wikipedia.org";
+        }
+    </script>
+</body>
+</html>
