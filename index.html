@@ -1,178 +1,209 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adult Wellness | 高端私密健康与膳食补剂商城</title>
+    <title>메디컬 웰니스 | 프리미엄 성인 건강 및 헬스케어</title>
     <style>
-        /* 全局黑金皮肤重构 */
+        /* 韩国现代科技感/医美级视觉风格 (Clean K-Style) */
         :root {
-            --primary: #c5a880; /* 奢华金 */
-            --accent: #6a1b9a;  /* 魅惑紫 */
-            --bg-dark: #0a0a0f; /* 深邃黑 */
-            --card-bg: #13131a; /* 卡片黑 */
+            --primary: #5856d6; /* 现代科技紫 */
+            --accent: #ff2d55;  /* 活力桃红 */
+            --bg-light: #f8f9fa; /* 极简浅灰背景 */
+            --text-dark: #1c1c1e;
+            --border-color: #e5e5ea;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background-color: var(--bg-dark); 
-            color: #ffffff; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow-x: hidden;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
+
+        /* 韩国法律强制：18세 미만 이용불가 (18禁限制标签) */
+        .adult-badge-top {
+            background: #cc0000; color: white; text-align: center; 
+            font-size: 12px; font-weight: bold; padding: 6px 0; letter-spacing: 1px;
         }
 
-        /* 18+ 拦截门样式 */
-        #adult-gate-overlay {
+        /* 韩国法律规范：严格的实名验证弹窗 (본인인증 팝업) */
+        #korea-auth-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle, #1a1a24 0%, #0a0a0f 100%);
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
             z-index: 9999999; display: flex; align-items: center; justify-content: center;
         }
-        .gate-container {
-            background: var(--card-bg); border: 1px solid #2a1b40; padding: 50px 40px;
-            border-radius: 20px; max-width: 450px; text-align: center;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+        .auth-container {
+            background: #ffffff; padding: 40px 30px; border-radius: 16px; 
+            max-width: 420px; width: 90%; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); border: 1px solid var(--border-color);
         }
-        .gate-logo { font-size: 32px; font-weight: 800; color: var(--primary); margin-bottom: 15px; letter-spacing: 1px; }
-        .gate-warning { font-size: 13px; color: #ff3344; background: rgba(255,51,68,0.1); padding: 6px 15px; border-radius: 20px; display: inline-block; margin-bottom: 20px; font-weight: 600; }
-        .gate-text { color: #a0a0ab; font-size: 15px; line-height: 1.6; margin-bottom: 35px; }
-        .gate-btn {
-            background: linear-gradient(135deg, var(--accent) 0%, #8e24aa 100%); color: #fff;
-            border: none; padding: 14px 40px; font-size: 16px; font-weight: bold;
-            border-radius: 30px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; width: 100%; margin-bottom: 12px;
+        .auth-title { font-size: 22px; font-weight: bold; color: #000; margin-bottom: 8px; }
+        .auth-subtitle { font-size: 13px; color: #8e8e93; margin-bottom: 25px; line-height: 1.4; }
+        
+        /* 韩国三大运营商选择样式 */
+        .carrier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+        .carrier-btn {
+            border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;
+            font-weight: bold; font-size: 14px; cursor: pointer; background: #fff; transition: all 0.2s;
         }
-        .gate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(106,27,154,0.4); }
-        .gate-btn-deny { background: transparent; color: #666; border: 1px solid #333; padding: 10px 40px; font-size: 14px; border-radius: 30px; cursor: pointer; width: 100%; }
+        .carrier-btn:hover, .carrier-btn.active { border-color: var(--primary); color: var(--primary); background: #f2f2ff; }
+        .carrier-skt { color: #ff2d55; }
+        .carrier-kt { color: #00b4b4; }
+        .carrier-lgu { color: #e6007e; }
 
-        /* 导航栏 */
+        .auth-submit-btn {
+            background: var(--text-dark); color: #fff; width: 100%; padding: 15px;
+            border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .auth-submit-btn:hover { background: #3a3a3c; }
+
+        /* 韩国现代化极简导航 */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 5%; background: rgba(10, 10, 15, 0.95);
-            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1a1a24;
+            padding: 15px 5%; background: #ffffff; position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--border-color);
         }
-        .logo { font-size: 24px; font-weight: 800; color: var(--primary); text-decoration: none; }
-        nav a { color: #fff; text-decoration: none; margin-left: 25px; font-size: 15px; transition: color 0.3s; }
+        .logo { font-size: 20px; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: -0.5px; }
+        nav a { color: #3a3a3c; text-decoration: none; margin-left: 20px; font-size: 14px; font-weight: 500; }
         nav a:hover { color: var(--primary); }
 
-        /* 首屏 Banner */
+        /* K-Style 医美级 Banner */
         .hero {
-            text-align: center; padding: 120px 20px;
-            background: linear-gradient(rgba(0,0,0,0.7), var(--bg-dark)), url('https://unsplash.com') center/cover;
+            text-align: center; padding: 100px 20px; background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
         }
-        .hero h1 { font-size: 45px; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; }
-        .hero p { font-size: 18px; color: var(--primary); margin-bottom: 40px; }
+        .hero h1 { font-size: 38px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; color: var(--text-dark); }
+        .hero p { font-size: 16px; color: #8e8e93; margin-bottom: 30px; font-weight: 400; }
         .hero-btn {
-            background: linear-gradient(135deg, var(--accent), #8e24aa); color: #fff;
-            padding: 15px 40px; font-size: 16px; font-weight: 700; border-radius: 50px;
-            text-decoration: none; display: inline-block; box-shadow: 0 10px 25px rgba(106,27,154,0.4);
+            background: var(--primary); color: #fff; padding: 14px 35px; font-size: 15px;
+            font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-block;
         }
 
-        /* 产品展示网格 */
-        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-        .section-title { text-align: center; margin-bottom: 50px; }
-        .section-title h2 { font-size: 32px; margin-bottom: 10px; }
-        .section-title p { color: #666; font-size: 14px; }
+        /* 韩国标志性的高质感产品卡片 */
+        .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+        .section-title { text-align: center; margin-bottom: 40px; }
+        .section-title h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+        .section-title p { color: #8e8e93; font-size: 13px; }
         
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .product-card {
-            background: var(--card-bg); border: 1px solid #1a1a24;
-            border-radius: 12px; padding: 20px; text-align: center;
-            transition: all 0.3s ease;
+            background: #ffffff; border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 20px; transition: transform 0.2s, box-shadow 0.2s;
         }
-        .product-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(106,27,154,0.2); }
-        .product-img { width: 100%; height: 220px; background: #1a1a24; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 40px; }
-        .product-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #fff; }
-        .product-price { color: var(--primary); font-size: 20px; font-weight: 700; margin-bottom: 15px; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .product-img { width: 100%; height: 240px; background: #f2f2f7; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; font-size: 45px; }
+        .product-tag { display: inline-block; background: #f2f2f7; color: #555; font-size: 11px; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; font-weight: 600; }
+        .product-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); line-height: 1.4; }
+        .product-price { color: var(--text-dark); font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        
+        /* 适配韩国两大主流即时通讯：KakaoTalk (구매하기) */
         .buy-btn {
-            display: inline-block; width: 100%; padding: 12px 0;
-            background: transparent; border: 1px solid var(--primary); color: var(--primary);
-            border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px 0;
+            background: #fee500; color: #181600; border-radius: 8px; text-decoration: none; 
+            font-weight: bold; font-size: 14px; transition: opacity 0.2s;
         }
-        .buy-btn:hover { background: var(--primary); color: #000; }
+        .buy-btn:hover { opacity: 0.9; }
 
-        /* 页脚免责声明 */
-        footer { background: #050508; padding: 40px 20px; text-align: center; border-top: 1px solid #1a1a24; margin-top: 60px; }
-        .disclaimer { max-width: 900px; margin: 0 auto; font-size: 11px; color: #555; line-height: 1.8; }
+        /* 韩国通信委员会 (KCC) 规范页脚：必须包含详细的运营信息免责 */
+        footer { background: #ffffff; padding: 40px 20px; border-top: 1px solid var(--border-color); margin-top: 60px; font-size: 12px; color: #8e8e93; line-height: 1.6; }
+        .footer-content { max-width: 1100px; margin: 0 auto; text-align: left; }
+        .korea-warning { color: #cc0000; font-weight: bold; margin-bottom: 15px; display: block; }
     </style>
 </head>
 <body>
 
-    <!-- 18+ 拦截门 -->
-    <div id="adult-gate-overlay">
-        <div class="gate-container">
-            <div class="gate-logo">ADULT WELLNESS</div>
-            <div class="gate-warning">⚠️ 限制级内容提示</div>
-            <div class="gate-text">本网站包含成人私密调理用品信息。您必须保证自身已年满 18 周岁方可进入浏览。</div>
-            <button class="gate-btn" onclick="verifyAdult()">我已年满 18 岁 · 进入网站</button>
-            <button class="gate-btn-deny" onclick="denyAdult()">未满 18 岁</button>
+    <!-- 韩国法律强制：网站最顶部红条标识 -->
+    <div class="adult-badge-top"> can 19세 미만 이용불가 (청소년보호법 기준) </div>
+
+    <!-- 本인인증 (手机实名验证拦截层) -->
+    <div id="korea-auth-overlay">
+        <div class="auth-container">
+            <div class="auth-title">성인 인증 (19+)</div>
+            <div class="auth-subtitle">본 정보는 청소년보호법의 규정에 따라 19세 미만의 청소년이 이용할 수 없습니다. 이용을 위해 휴대폰 인증을 진행해 주세요.</div>
+            
+            <div class="carrier-grid">
+                <button class="carrier-btn carrier-skt" onclick="selectCarrier(this)">SKT</button>
+                <button class="carrier-btn carrier-kt" onclick="selectCarrier(this)">KT</button>
+                <button class="carrier-btn carrier-lgu" onclick="selectCarrier(this)">LG U+</button>
+            </div>
+
+            <button class="auth-submit-btn" onclick="requestKoreaAuth()">휴대폰 안전인증 하기</button>
         </div>
     </div>
 
     <!-- 导航栏 -->
     <header>
-        <a href="#" class="logo">ADULT STORE</a>
+        <a href="#" class="logo">MEDICAL WELLNESS</a>
         <nav>
-            <a href="#">首页</a>
-            <a href="#shop">男性专区</a>
-            <a href="#shop">女性私密</a>
-            <a href="https://t.me" target="_blank" style="color:var(--primary); font-weight:bold;">联系客服</a>
+            <a href="#">홈</a>
+            <a href="#shop">남성 케어</a>
+            <a href="#shop">여성 프리미엄</a>
+            <!-- 韩国本地化客服：通常链接到 KakaoTalk Channel -->
+            <a href="https://kakao.com" target="_blank" style="color:var(--primary); font-weight:bold;">카카오톡 문의</a>
         </nav>
     </header>
 
-    <!-- 核心 Banner -->
+    <!-- 主视觉区 -->
     <section class="hero">
-        <h1>重塑身体机能 · 焕发巅峰渴望</h1>
-        <p>探索高端亲密健康膳食补剂与调理方案</p>
-        <a href="#shop" class="hero-btn">立即选购</a>
+        <h1>더 건강하고 안전한 친밀함을 위해</h1>
+        <p>글로벌 탑티어 천연 허브 추출 성인 건강 보충제 및 스킨케어 솔루션</p>
+        <a href="#shop" class="hero-btn">제품 보러가기</a>
     </section>
 
-    <!-- 商品区域 -->
+    <!-- 商品网格 -->
     <main class="container" id="shop">
         <div class="section-title">
-            <h2>尊享私密单品</h2>
-            <p>100% 隐私保护 · 全程保密顺丰发货</p>
+            <h2>Premium 오리지널 라인업</h2>
+            <p>100% 비밀 포장 · 안심 우체국택배 발송 (송장품명 '화장품/잡화' 표기)</p>
         </div>
 
         <div class="product-grid">
-            <!-- 单品 1 -->
+            <!-- 产品 1 -->
             <div class="product-card">
-                <div class="product-img">♂️</div>
-                <div class="product-title">男士高纯度复合玛咖膳食补剂</div>
-                <div class="product-price">￥399.00</div>
-                <!-- 此处可以将链接替换为你的 Telegram、微信二维码、或第三方收款直链 -->
-                <a href="https://t.me" target="_blank" class="buy-btn">立即私密订购</a>
+                <div class="product-img">🌿</div>
+                <div class="product-tag">남성 에너제틱</div>
+                <div class="product-title">프리미엄 고농축 마카 & 아르기닌 복합 보충제 (60정)</div>
+                <div class="product-price">79,000 원</div>
+                <a href="https://kakao.com" target="_blank" class="buy-btn">💬 카카오톡으로 빠른 구매</a>
             </div>
 
-            <!-- 单品 2 -->
+            <!-- 产品 2 -->
             <div class="product-card">
-                <div class="product-img">💧</div>
-                <div class="product-title">植物萃取男士极速紧致按摩精油</div>
-                <div class="product-price">￥450.00</div>
-                <a href="https://t.me" target="_blank" class="buy-btn">立即私密订购</a>
+                <div class="product-img">🧪</div>
+                <div class="product-tag">남성 외용케어</div>
+                <div class="product-title">천연 식물성 추출 활력 마사지 에센셜 오일 (50ml)</div>
+                <div class="product-price">85,000 원</div>
+                <a href="https://kakao.com" target="_blank" class="buy-btn">💬 카카오톡으로 빠른 구매</a>
             </div>
 
-            <!-- 单品 3 -->
+            <!-- 产品 3 -->
             <div class="product-card">
-                <div class="product-img">♀️</div>
-                <div class="product-title">女性私密舒缓快感促进凝胶</div>
-                <div class="product-price">￥299.00</div>
-                <a href="https://t.me" target="_blank" class="buy-btn">立即私密订购</a>
+                <div class="product-img">🌸</div>
+                <div class="product-tag">여성 시크릿케어</div>
+                <div class="product-title">와이존 탄력 솔루션 수분 강화 프리미엄 젤</div>
+                <div class="product-price">59,000 원</div>
+                <a href="https://kakao.com" target="_blank" class="buy-btn">💬 카카오톡으로 빠른 구매</a>
             </div>
         </div>
     </main>
 
-    <!-- 法律合规页脚 -->
+    <!-- 韩国合规法律页脚 -->
     <footer>
-        <div class="disclaimer">
-            <strong>LEGAL DISCLAIMER / 法律免责声明:</strong> 本站销售的所有商品均属于成人两性用品。页面上关于补剂效果的任何陈述未经官方正式评估。此类产品不可替代处方药，不用于诊断、治疗或预防任何疾病。阁下点击进入本站即等同于确认自身已满足当地法定成年人标准（满18岁）。
+        <div class="footer-content">
+            <span class="korea-warning">경고: 본 제품은 성인 전용 건강 지향 보충제 및 화장품입니다. 질병의 예방 및 치료를 위한 의약품이 아닙니다.</span>
+            <p>
+                재화 등의 판매자 정보: 해외 직구 구매대행 서비스 | 이용약관 | 개인정보처리방침<br>
+                본 웹사이트에 게재된 모든 성인용 건강 정보 및 보충제 성분 분석은 청소년보호법에 의거하여 만 19세 미만의 청소년의 출입을 금합니다. 
+                Copyright © Medical Wellness. All Rights Reserved.
+            </p>
         </div>
     </footer>
 
     <script>
-        function verifyAdult() {
-            document.getElementById('adult-gate-overlay').style.display = 'none';
+        function selectCarrier(btn) {
+            // 切换运营商选中状态
+            document.querySelectorAll('.carrier-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
-        function denyAdult() {
-            window.location.href = "https://wikipedia.org";
-        }
-    </script>
-</body>
-</html>
+
+        function requestKoreaAuth() {
+            // 正规建站时：此处应调用 Pass / Danal / KCB 的 API 接口。
+            // 独立引流站做法：模拟通过后关闭拦截。
+            alert("휴대폰 실명 인증이 완료되었습니다.");
